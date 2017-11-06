@@ -6,31 +6,34 @@ import java.util.*;
 /**
  * Created by Lenovo on 2017-11-02.
  */
-public class DijkstraAlgorithm {
+public class DijkstraAlgorithm<T> {
+    private List<Object> pastVertices = new ArrayList<>();
 
 
-    public Float DijkstraDistance(Graph graph, Vertex origin, Vertex destination){
-        Set<Vertex> set = new HashSet<>(graph.getVertices());
-        /*for (Vertex vertex:set) {
+    public DestinationVertex<T> DijkstraDistance(Graph<T> graph, Vertex<T> origin, Vertex<T> destination) {
+        Set<Vertex<T>> set = new HashSet<>(graph.getVertices());
+        /*for (Vertex<T vertex:set) {
             if(vertex !=origin)
             vertex.setCalulatedDistance(Float.MAX_VALUE);
             else vertex.setCalulatedDistance(0f);
         }
         origin.setCalulatedDistance(0f);*/ //Stream zamiast pętli.
-        set.stream().filter(vertex->vertex != origin).forEach(v-> v.setCalulatedDistance(Float.MAX_VALUE));
+        set.stream().filter(vertex -> vertex != origin).forEach(v -> v.setCalulatedDistance(Float.MAX_VALUE));
         origin.setCalulatedDistance(0f);
-        Queue<Vertex> vertices = new PriorityQueue<Vertex>(set);
-        while(!vertices.isEmpty()){
-            Vertex temp = vertices.remove();
-            for (Edge edge:temp.getEgdes()) {
-                if(edge.getLength()+temp.getCalulatedDistance()<edge.getOtherVertex(temp).getCalulatedDistance())edge.
-                        getOtherVertex(temp).setCalulatedDistance(edge.getLength()+temp.getCalulatedDistance());
+        Queue<Vertex<T>> vertices = new PriorityQueue<Vertex<T>>(set);
+        while (!vertices.isEmpty()) {
+            Vertex<T> CurrentVertex = vertices.remove();
+            for (Edge<T> edge : CurrentVertex.getEgdes()) {
+                float newCalculatedDistane = edge.getLength() + CurrentVertex.getCalulatedDistance();
+                if (newCalculatedDistane < edge.getOtherVertex(CurrentVertex).getCalulatedDistance()){
+                    edge.getOtherVertex(CurrentVertex).setCalulatedDistance(newCalculatedDistane);
+                    edge.getOtherVertex(CurrentVertex).add(CurrentVertex.getName());
+                }
             }
         }
 
-        return destination.getCalulatedDistance();
+        return new DestinationVertex<T>(origin, destination);
     }
-
 
 
 }

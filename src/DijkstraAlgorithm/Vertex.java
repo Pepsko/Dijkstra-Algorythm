@@ -7,9 +7,17 @@ import java.util.List;
  * Created by Lenovo on 2017-11-02.
  */
 public class Vertex<T> implements Comparable<Vertex<T>>{
-    private final List<Edge> edges = new ArrayList<>();
+    private final List<Edge<T>> edges = new ArrayList<>();
     private final T name;
     private Float calulatedDistance = 0f;
+    protected List<T> path = new ArrayList<T>();
+    public void add(T name){
+        path.add(name);
+    }
+
+    public Vertex() {
+        this.name = null;
+    }
 
     public Float getCalulatedDistance() {
         return calulatedDistance;
@@ -23,8 +31,11 @@ public class Vertex<T> implements Comparable<Vertex<T>>{
         this.name = name;
 
     }
-    public void link(Vertex vertex, float weight){
-        Edge edge = new Edge(this, vertex, weight);
+    public T getName(){
+        return name;
+    }
+    public void link(Vertex<T> vertex, float weight){
+        Edge<T> edge = new Edge<T>(this, vertex, weight);
         edges.add(edge);
         vertex.edges.add(edge);
     }
@@ -35,7 +46,7 @@ public class Vertex<T> implements Comparable<Vertex<T>>{
         }return vertex;
 
     }
-     Edge[] getEgdes(){
+     Edge<T>[] getEgdes(){
         Edge[] array = new Edge[edges.size()];
         for (int i = 0; i <edges.size() ; i++) {
             array[i] = edges.get(i);
